@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Meetup on Karol Górecki</title>
+    <link>http://karolgorecki.pl/tags/meetup/</link>
+    <description>Recent content in Meetup on Karol Górecki</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2016 by Karol Górecki</copyright>
+    <lastBuildDate>Sun, 01 Nov 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://karolgorecki.pl/tags/meetup/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Warsztaty Golang</title>
+      <link>http://karolgorecki.pl/post/golang-warsztaty/</link>
+      <pubDate>Sun, 01 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://karolgorecki.pl/post/golang-warsztaty/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;http://www.meetup.com/Gophers-Katowice/events/226189717/&#34;&gt;&lt;strong&gt;Kolejne spotkanie&lt;/strong&gt; (14.11.2015)&lt;/a&gt; będzie miało formę warsztatów, na którym będziemy razem budować nieśmiertelny TodoApp.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Golang meetups Katowice</title>
+      <link>http://karolgorecki.pl/post/golang-meetups/</link>
+      <pubDate>Thu, 10 Sep 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://karolgorecki.pl/post/golang-meetups/</guid>
+      <description>
+
+&lt;h1 id=&#34;spotkania-golang-gophers-katowice:fe40fc8cb3d1830ab6965f4204b524db&#34;&gt;Spotkania Golang - Gophers Katowice&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gophers.katowice.pl/gophers-katowice.png&#34; alt=&#34;Gophers Katowice&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Dla wszystkich osób chcących poznać Golang mam miłą informację!&lt;br /&gt;
+W Katowicach otwiermay grupę &lt;a href=&#34;http://meetup.com/Gophers-Katowice/&#34;&gt;Gophers Katowice&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Spotkania są przeznaczone głównie dla osób początkujących jednak znajdzie się coś ciekawego dla osób,
+które już posiadają jakieś doświadczenie.&lt;/p&gt;
+
+&lt;p&gt;Spotkania będą odbywały się cyklicznie - 1 raz w miesiącu.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.meetup.com/Gophers-Katowice/events/224859464/&#34;&gt;&lt;strong&gt;Pierwsze spotkanie odbędzie się 28.10.2015&lt;/strong&gt;&lt;/a&gt;, na którym zostaną wygłoszone 2 prezentacje:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://go-talks.appspot.com/github.com/karolgorecki/talks/letsgo/letsgo.slide&#34;&gt;Let&amp;rsquo;s Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://go-talks.appspot.com/github.com/jgautheron/talks/2015/waytogo/waytogo.slide&#34;&gt;The way to Go&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

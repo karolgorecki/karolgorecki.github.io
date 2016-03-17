@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Npm on Karol Górecki</title>
+    <link>http://karolgorecki.pl/tags/npm/</link>
+    <description>Recent content in Npm on Karol Górecki</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2016 by Karol Górecki</copyright>
+    <lastBuildDate>Sat, 02 Jan 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://karolgorecki.pl/tags/npm/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Piszemy paczkę NPM w es6</title>
+      <link>http://karolgorecki.pl/post/paczka-npm-es2015/</link>
+      <pubDate>Sat, 02 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://karolgorecki.pl/post/paczka-npm-es2015/</guid>
+      <description>
+
+&lt;p&gt;Tym razem napiszemy i opublikujemy prostą paczkę es6/es7.
+Nie będziemy skupiać się na samym kodzie, lecz na krokach jakie musimy wykonać aby nasza paczka poprawnie działała.&lt;/p&gt;
+
+&lt;h1 id=&#34;transpilacja-kodu-do-es5:3ec7cf84d28cef5d358e748c14d00db9&#34;&gt;Transpilacja kodu do es5&lt;/h1&gt;
+
+&lt;p&gt;Niestety javascript w wersji es6 i es7 nie jest jeszcze dobrze wspierany. Z tego powodu musimy użyć narzędzia Babel.
+Jego zadaniem jest przekompilowanie kodu napisanego w es6, es7 do kodu w wersji es5,
+który nie ma tylu ciekawych funkcji ale za to ma ogromne wspracie.
+Warto pamiętać o tym, że nie wszystko można &amp;ldquo;przepisać&amp;rdquo; do wersji es5.
+Do działania niektórych funkcji (np. Promise, Fetch) będziemy musieli użyć tzw. pollyfill - najprościej mówiąc kawałek kodu (łatka),
+który udostępnia funkcjonalność, którą my programiści oczekujemy by była natywnie dostępna.
+Po tym krótkim wprowadzeniu możemy zabierać się do pracy!&lt;/p&gt;
+
+&lt;h1 id=&#34;tworzymy-paczkę-i-dodajemy-zależności:3ec7cf84d28cef5d358e748c14d00db9&#34;&gt;Tworzymy paczkę i dodajemy zależności&lt;/h1&gt;
+
+&lt;p&gt;Dla przykładu będę tworzył paczkę o nazwie &lt;code&gt;paczuszka&lt;/code&gt;. Pamiętajcie, że nazwa powinna być unikatowa.&lt;/p&gt;
+
+&lt;p&gt;Stwórzmy najpierw katalog, w którym będziemy rozwijać naszą paczkę.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir paczuszka
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;W folderze &lt;code&gt;paczuszka&lt;/code&gt; uruchomimy komendę dzięki której stworzymy naszą paczkę.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm init
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/7apokxfs2ic8dgukks0lc29ks.js&#34; id=&#34;asciicast-7apokxfs2ic8dgukks0lc29ks&#34; async&gt;&lt;/script&gt;
+
+&lt;p&gt;Jak już wcześniej wspomniałem będziemy potrzebować Babela. Aby dodać go do naszej paczki wydajmy polecenie:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install babel-cli babel-preset-es2015 -D
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/ax6lwp6dv34h29k1q11npdps5.js&#34; id=&#34;asciicast-ax6lwp6dv34h29k1q11npdps5&#34; async&gt;&lt;/script&gt;
+
+&lt;p&gt;Po zainstalowaniu niezbędnych paczek i dodaniu ich jako dev zależności (&lt;code&gt;-D&lt;/code&gt; lub &lt;code&gt;--save-dev&lt;/code&gt;) w naszej paczce
+powinniśmy zobaczyć:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+  &amp;quot;devDependencies&amp;quot;: {
+    &amp;quot;babel-cli&amp;quot;: &amp;quot;^6.5.1&amp;quot;,
+    &amp;quot;babel-preset-es2015&amp;quot;: &amp;quot;^6.5.0&amp;quot;
+  }
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jeśli pisząc naszą paczkę chcemy również używać rzeczy z es7 to powinniśmy również doinstalować:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install babel-preset-stage-0 -D
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;struktura:3ec7cf84d28cef5d358e748c14d00db9&#34;&gt;Struktura&lt;/h1&gt;
+
+&lt;p&gt;Kolejnym krokiem jest stworzenie struktury dla naszej paczki. W naszym katalogu powinniśmy mieć:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/paczuszka/
+|-- src
+|   `-- main.js // kod es6, es7 do skompilowania
+|-- dist // zostanie stworzony podczas kompilacji
+|   `-- main.js // kod es5 skompilowany przez Babel
+|-- package.json // nasza paczka
+|-- .gitignore
+`-- .npmignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;src/main.js&lt;/code&gt; - tutaj będziemy pisali nasz kod wykorzystując es6 czy es7. Dla przykładu wrzućmy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;const unknown = &#39;some guy&#39;;
+
+module.exports = (name = unknown) =&amp;gt; {
+    return `Hello, ${name}! Have a nice day`;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;dist/main.js&lt;/code&gt; - tego pliku nie musimy tworzyć, zostanie on utworzony przez Babela podczas kompilacji&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;&#39;use strict&#39;;
+
+var unknown = &#39;some guy&#39;;
+
+module.exports = function () {
+    var name = arguments.length &amp;lt;= 0 || arguments[0] === undefined ? unknown : arguments[0];
+
+    return &#39;Hello, &#39; + name + &#39;! Have a nice day&#39;;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;.gitignore&lt;/code&gt; - przyda nam się aby zignorować folder &lt;code&gt;dist&lt;/code&gt; oraz &lt;code&gt;node_modules&lt;/code&gt; gdy będziemy naszą paczkę wrzucać na repozytorium. Nie ma potrzeby trzymania skomilowanego kodu ani też modułów node&amp;rsquo;a. Zawartość:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;dist
+node_modules
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;.npmignore&lt;/code&gt; - przyda nam się do zignorowania kodu źródłowego &lt;code&gt;src/main.js&lt;/code&gt;. Na NPM powinniśmy trzymać tylko to co będziemy używać
+czyli skompilowany do es5 kod - &lt;code&gt;dist/main.js&lt;/code&gt;. Zawartość:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;src
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;npm-zadania:3ec7cf84d28cef5d358e748c14d00db9&#34;&gt;NPM zadania&lt;/h1&gt;
+
+&lt;p&gt;Utworzymy w npm 2 zadania, które ułatwią nam publikowanie i budowanie paczki:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+&amp;quot;scripts&amp;quot;: {
+    // polecenie &amp;quot;test&amp;quot; możemy usunąć - nie będzie potrzebne
+    &amp;quot;build&amp;quot;: &amp;quot;babel --presets es2015,stage-0 -d dist/ src/&amp;quot;,
+    &amp;quot;prepublish&amp;quot;: &amp;quot;npm run build&amp;quot;
+}
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jak łatwo się domyślić &lt;code&gt;build&lt;/code&gt; kompiluje nam nasz plik z folderu &lt;code&gt;src/&lt;/code&gt; korzystając z predefiniowanych
+es2015 oraz stage-0 do katalogu &lt;code&gt;dist/&lt;/code&gt;. Zadaniem &lt;code&gt;prepublish&lt;/code&gt; jest wykonanie kompilacji przed samym publikowaniem (przedrostek &lt;code&gt;pre&lt;/code&gt;) do NPM&amp;rsquo;a.&lt;/p&gt;
+
+&lt;h1 id=&#34;budujemy-i-publikujemy:3ec7cf84d28cef5d358e748c14d00db9&#34;&gt;Budujemy i publikujemy&lt;/h1&gt;
+
+&lt;p&gt;Jeśli jeszcze nie dodałeś swoich informacji o koncie NPM wykonaj:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm login // lub npm adduser
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Testujemy budowanie paczki&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm run build
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/1gv379fpuffq04u7m8nxusccc.js&#34; id=&#34;asciicast-1gv379fpuffq04u7m8nxusccc&#34; async&gt;&lt;/script&gt;
+
+&lt;p&gt;Testujemy publikowanie paczki&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm publish
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/bmpt7ffoueqyc21gr2nivcd43.js&#34; id=&#34;asciicast-bmpt7ffoueqyc21gr2nivcd43&#34; async&gt;&lt;/script&gt;
+
+&lt;p&gt;Zauważ, że usuneliśmy folder &lt;code&gt;dist&lt;/code&gt;, który i tak później został stworzony dzięki &lt;code&gt;prepublish&lt;/code&gt;, który
+przed publikowaniem wykonuje &lt;code&gt;build&lt;/code&gt;. (W międzyczasie zmieniłem wersję paczki na 1.0.10 żebym mógł kolejny raz ją wysłać)&lt;/p&gt;
+
+&lt;p&gt;Jeśli wszystko poszło OK powinniśmy mieć naszą paczkę w repozytorium NPM:
+&lt;a href=&#34;https://www.npmjs.com/package/paczuszka&#34;&gt;https://www.npmjs.com/package/paczuszka&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Teraz przetestujmy czy działa:
+&lt;script type=&#34;text/javascript&#34; src=&#34;https://asciinema.org/a/4rjfzjwhfv7jxfmtbeknjtvb3.js&#34; id=&#34;asciicast-4rjfzjwhfv7jxfmtbeknjtvb3&#34; async&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;Na szybko stworzyłem nową paczkę npm i zainstalowałem wcześniej stworzoną &amp;ldquo;paczuszkę&amp;rdquo;. Po krótkich testach w node
+wygląda, że wszystko działa tak jak powinno!&lt;/p&gt;
+
+&lt;p&gt;Teraz wasza kolej!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

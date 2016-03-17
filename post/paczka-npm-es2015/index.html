@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    
+    <title>Piszemy paczkę NPM w es6</title>
+    
+
+    
+
+    
+    <link href="http://karolgorecki.pl/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://karolgorecki.pl/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,400italic,600,700,600italic,700italic,800,800italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://karolgorecki.pl/">Karol Górecki</a>
+            </div>
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://karolgorecki.pl/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://karolgorecki.pl/about">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://karolgorecki.pl/post/">archive</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://karolgorecki.pl/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Piszemy Paczkę NPM W Es6</h1>
+               <h2 class="subheading">Jak opublikować paczkę npm z wykorzystaniem es6, es7 oraz Babel CLI</h2>
+               <span class="meta">Posted by <a href="#">Karol Górecki</a> on Sat, Jan 2, 2016
+                 <br />
+                 In <a href="http://karolgorecki.pl/categories/js" >Js</a>, 
+
+                 <br />
+                 Tags <a href="http://karolgorecki.pl/tags/js" >js</a> <a href="http://karolgorecki.pl/tags/npm" >npm</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>Tym razem napiszemy i opublikujemy prostą paczkę es6/es7.
+Nie będziemy skupiać się na samym kodzie, lecz na krokach jakie musimy wykonać aby nasza paczka poprawnie działała.</p>
+
+<h1 id="transpilacja-kodu-do-es5:3ec7cf84d28cef5d358e748c14d00db9">Transpilacja kodu do es5</h1>
+
+<p>Niestety javascript w wersji es6 i es7 nie jest jeszcze dobrze wspierany. Z tego powodu musimy użyć narzędzia Babel.
+Jego zadaniem jest przekompilowanie kodu napisanego w es6, es7 do kodu w wersji es5,
+który nie ma tylu ciekawych funkcji ale za to ma ogromne wspracie.
+Warto pamiętać o tym, że nie wszystko można &ldquo;przepisać&rdquo; do wersji es5.
+Do działania niektórych funkcji (np. Promise, Fetch) będziemy musieli użyć tzw. pollyfill - najprościej mówiąc kawałek kodu (łatka),
+który udostępnia funkcjonalność, którą my programiści oczekujemy by była natywnie dostępna.
+Po tym krótkim wprowadzeniu możemy zabierać się do pracy!</p>
+
+<h1 id="tworzymy-paczkę-i-dodajemy-zależności:3ec7cf84d28cef5d358e748c14d00db9">Tworzymy paczkę i dodajemy zależności</h1>
+
+<p>Dla przykładu będę tworzył paczkę o nazwie <code>paczuszka</code>. Pamiętajcie, że nazwa powinna być unikatowa.</p>
+
+<p>Stwórzmy najpierw katalog, w którym będziemy rozwijać naszą paczkę.</p>
+
+<pre><code>mkdir paczuszka
+</code></pre>
+
+<p>W folderze <code>paczuszka</code> uruchomimy komendę dzięki której stworzymy naszą paczkę.</p>
+
+<pre><code>npm init
+</code></pre>
+
+<script type="text/javascript" src="https://asciinema.org/a/7apokxfs2ic8dgukks0lc29ks.js" id="asciicast-7apokxfs2ic8dgukks0lc29ks" async></script>
+
+<p>Jak już wcześniej wspomniałem będziemy potrzebować Babela. Aby dodać go do naszej paczki wydajmy polecenie:</p>
+
+<pre><code>npm install babel-cli babel-preset-es2015 -D
+</code></pre>
+
+<script type="text/javascript" src="https://asciinema.org/a/ax6lwp6dv34h29k1q11npdps5.js" id="asciicast-ax6lwp6dv34h29k1q11npdps5" async></script>
+
+<p>Po zainstalowaniu niezbędnych paczek i dodaniu ich jako dev zależności (<code>-D</code> lub <code>--save-dev</code>) w naszej paczce
+powinniśmy zobaczyć:</p>
+
+<pre><code>...
+  &quot;devDependencies&quot;: {
+    &quot;babel-cli&quot;: &quot;^6.5.1&quot;,
+    &quot;babel-preset-es2015&quot;: &quot;^6.5.0&quot;
+  }
+...
+</code></pre>
+
+<p>Jeśli pisząc naszą paczkę chcemy również używać rzeczy z es7 to powinniśmy również doinstalować:</p>
+
+<pre><code>npm install babel-preset-stage-0 -D
+</code></pre>
+
+<h1 id="struktura:3ec7cf84d28cef5d358e748c14d00db9">Struktura</h1>
+
+<p>Kolejnym krokiem jest stworzenie struktury dla naszej paczki. W naszym katalogu powinniśmy mieć:</p>
+
+<pre><code>/paczuszka/
+|-- src
+|   `-- main.js // kod es6, es7 do skompilowania
+|-- dist // zostanie stworzony podczas kompilacji
+|   `-- main.js // kod es5 skompilowany przez Babel
+|-- package.json // nasza paczka
+|-- .gitignore
+`-- .npmignore
+</code></pre>
+
+<p><code>src/main.js</code> - tutaj będziemy pisali nasz kod wykorzystując es6 czy es7. Dla przykładu wrzućmy:</p>
+
+<pre><code class="language-js">const unknown = 'some guy';
+
+module.exports = (name = unknown) =&gt; {
+    return `Hello, ${name}! Have a nice day`;
+};
+</code></pre>
+
+<p><code>dist/main.js</code> - tego pliku nie musimy tworzyć, zostanie on utworzony przez Babela podczas kompilacji</p>
+
+<pre><code class="language-js">'use strict';
+
+var unknown = 'some guy';
+
+module.exports = function () {
+    var name = arguments.length &lt;= 0 || arguments[0] === undefined ? unknown : arguments[0];
+
+    return 'Hello, ' + name + '! Have a nice day';
+};
+</code></pre>
+
+<p><code>.gitignore</code> - przyda nam się aby zignorować folder <code>dist</code> oraz <code>node_modules</code> gdy będziemy naszą paczkę wrzucać na repozytorium. Nie ma potrzeby trzymania skomilowanego kodu ani też modułów node&rsquo;a. Zawartość:</p>
+
+<pre><code>dist
+node_modules
+</code></pre>
+
+<p><code>.npmignore</code> - przyda nam się do zignorowania kodu źródłowego <code>src/main.js</code>. Na NPM powinniśmy trzymać tylko to co będziemy używać
+czyli skompilowany do es5 kod - <code>dist/main.js</code>. Zawartość:</p>
+
+<pre><code>src
+</code></pre>
+
+<h1 id="npm-zadania:3ec7cf84d28cef5d358e748c14d00db9">NPM zadania</h1>
+
+<p>Utworzymy w npm 2 zadania, które ułatwią nam publikowanie i budowanie paczki:</p>
+
+<pre><code>...
+&quot;scripts&quot;: {
+    // polecenie &quot;test&quot; możemy usunąć - nie będzie potrzebne
+    &quot;build&quot;: &quot;babel --presets es2015,stage-0 -d dist/ src/&quot;,
+    &quot;prepublish&quot;: &quot;npm run build&quot;
+}
+...
+</code></pre>
+
+<p>Jak łatwo się domyślić <code>build</code> kompiluje nam nasz plik z folderu <code>src/</code> korzystając z predefiniowanych
+es2015 oraz stage-0 do katalogu <code>dist/</code>. Zadaniem <code>prepublish</code> jest wykonanie kompilacji przed samym publikowaniem (przedrostek <code>pre</code>) do NPM&rsquo;a.</p>
+
+<h1 id="budujemy-i-publikujemy:3ec7cf84d28cef5d358e748c14d00db9">Budujemy i publikujemy</h1>
+
+<p>Jeśli jeszcze nie dodałeś swoich informacji o koncie NPM wykonaj:</p>
+
+<pre><code>npm login // lub npm adduser
+</code></pre>
+
+<p>Testujemy budowanie paczki</p>
+
+<pre><code>npm run build
+</code></pre>
+
+<script type="text/javascript" src="https://asciinema.org/a/1gv379fpuffq04u7m8nxusccc.js" id="asciicast-1gv379fpuffq04u7m8nxusccc" async></script>
+
+<p>Testujemy publikowanie paczki</p>
+
+<pre><code>npm publish
+</code></pre>
+
+<script type="text/javascript" src="https://asciinema.org/a/bmpt7ffoueqyc21gr2nivcd43.js" id="asciicast-bmpt7ffoueqyc21gr2nivcd43" async></script>
+
+<p>Zauważ, że usuneliśmy folder <code>dist</code>, który i tak później został stworzony dzięki <code>prepublish</code>, który
+przed publikowaniem wykonuje <code>build</code>. (W międzyczasie zmieniłem wersję paczki na 1.0.10 żebym mógł kolejny raz ją wysłać)</p>
+
+<p>Jeśli wszystko poszło OK powinniśmy mieć naszą paczkę w repozytorium NPM:
+<a href="https://www.npmjs.com/package/paczuszka">https://www.npmjs.com/package/paczuszka</a></p>
+
+<p>Teraz przetestujmy czy działa:
+<script type="text/javascript" src="https://asciinema.org/a/4rjfzjwhfv7jxfmtbeknjtvb3.js" id="asciicast-4rjfzjwhfv7jxfmtbeknjtvb3" async></script></p>
+
+<p>Na szybko stworzyłem nową paczkę npm i zainstalowałem wcześniej stworzoną &ldquo;paczuszkę&rdquo;. Po krótkich testach w node
+wygląda, że wszystko działa tak jak powinno!</p>
+
+<p>Teraz wasza kolej!</p>
+
+                  <br/>
+                  <hr/>
+                  <br/>
+                  <div id="disqus_thread"></div>
+<script>
+    
+
+    
+
+
+
+   
+    var x = "http:\/\/karolgorecki.pl\/post\/paczka-npm-es2015\/";
+    var y = "";
+    (function() {  
+        var d = document, s = d.createElement('script');
+        s.src = '//karolgorecki.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:hi@karolgorecki.pl">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/karolgorecki">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/karolgorecki">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">© 2016 by Karol Górecki</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://karolgorecki.pl/js/jquery.min.js"></script>
+
+    
+    <script src="http://karolgorecki.pl/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://karolgorecki.pl/js/clean-blog.js"></script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-69602801-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+</body>
+
+</html>
+

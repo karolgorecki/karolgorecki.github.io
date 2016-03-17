@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    
+    <title>Lepsze importowanie plików w ReactJS</title>
+    
+
+    
+
+    
+    <link href="http://karolgorecki.pl/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://karolgorecki.pl/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,400italic,600,700,600italic,700italic,800,800italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://karolgorecki.pl/">Karol Górecki</a>
+            </div>
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://karolgorecki.pl/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://karolgorecki.pl/about">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://karolgorecki.pl/post/">archive</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://karolgorecki.pl/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Lepsze Importowanie Plików W ReactJS</h1>
+               <h2 class="subheading">Jak usprawnić importowanie w projektach opartych o Webpack i React</h2>
+               <span class="meta">Posted by <a href="#">Karol Górecki</a> on Sun, Dec 20, 2015
+                 <br />
+                 In <a href="http://karolgorecki.pl/categories/js" >Js</a>, <a href="http://karolgorecki.pl/categories/react" >React</a>, 
+
+                 <br />
+                 Tags <a href="http://karolgorecki.pl/tags/react" >react</a> <a href="http://karolgorecki.pl/tags/js" >js</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h1 id="importowanie-relatywne:9409937ad10ab5cb8821b2a45dac50d2">Importowanie relatywne 😣</h1>
+
+<p>Jeśli miałeś przyjemność pracować z ReactJS to zapewne niejednokrotnie spotkałeś się z poniższym zapisem</p>
+
+<pre><code class="language-js">import Foo from '../../components/Foo';
+import Bar from '../../containers/common/Bar.js';
+</code></pre>
+
+<p>Na pierwszy rzut oka wygląda OK, jednak na dłuższą metę taki zapis jest
+nieco irytujący i może być w przyszłości problematyczny.
+Co jeśli chcielibyśmy przenieść nasze komponenty lub kontenery w inne miejsce? No właśnie! Musielibyśmy
+w kilkunastu lub kilkudziesięciu plikach zmieniać ścieżki.
+Nie trudno też o pomyłki przy podawaniu lokalizacji gdy projekt nam się nieco rozrośnie.</p>
+
+<h1 id="webpack-resolve-alias:9409937ad10ab5cb8821b2a45dac50d2">Webpack Resolve Alias 😍</h1>
+
+<p>Na szczęście istenieje sposób żeby usprawnić importowanie. Wystarczy, że skorzystamy z aliasów dostępnych
+w Webpacku (<code>Webpack Alias</code>). Do naszej Webpackowej konfiguracji dodajemy:</p>
+
+<pre><code class="language-js">...
+resolve: {
+  alias: {
+    '~': path.resolve(__dirname, 'src'),
+    'components': path.resolve(__dirname, 'src/components'),
+    'containers': path.resolve(__dirname, 'src/containers')
+  }
+},
+...
+</code></pre>
+
+<p>Po tej prostej operacji możemy używać poniższych zapisów</p>
+
+<pre><code class="language-js">import Foo from '~/components/Foo';
+import Bar from '~/containers/common/Bar.js';
+// lub
+import Foo from 'components/Foo';
+import Bar from 'containers/common/Bar.js';
+</code></pre>
+
+<h1 id="webpack-modulesdirectories:9409937ad10ab5cb8821b2a45dac50d2">Webpack modulesDirectories</h1>
+
+<p>Inną i nieco lepszą opcją jest użycie <code>modulesDirectories</code>. Do konfiguracji musimy dodać:</p>
+
+<pre><code>...
+resolve: {
+    modulesDirectories: [
+      'src', // dodajemy katalog src
+      'node_modules'
+    ],
+...
+</code></pre>
+
+<p>Do sekcji <code>modulesDirectories</code> dodajmy katalog <code>src</code>, w którym będziemy trzymać nasze komponenty,
+kontenery itd. Kolejnym krokiem jest stworzenie pliku <code>index.js</code> dla komponentów oraz kontenerów.
+Dla przykładu przyjrzyjmy się następującej strukturze</p>
+
+<pre><code class="language-js">nasz-projekt
+ ├── ...
+ └── src
+     ├── components
+     │   ├── Time
+     │   │   └── Time.js
+     │   ├── Counter
+     │   │   └── Counter.js
+     │   └── Button
+     │   │   └── Button.js
+     │   └── index.js // zawiera indeks komponentów
+     │
+     └── containers
+         ├── Home
+         │   └── Home.js
+         ├── About
+         │   └── About.js
+         └── Contact
+         │   └── Contact.js
+         └── index.js // zawiera indeks kontenerów
+</code></pre>
+
+<p>Interesują nas tutaj pliki <code>index.js</code> w katalogu <code>src/components</code> oraz <code>src/containers</code>.
+W naszych indeksach powinniśmy wyeksportować komponenty, które później chcemy importować:</p>
+
+<pre><code class="language-js">// src/components/index.js
+export Time from './Time/Time';
+export Counter from './Counter/Counter';
+export Button from './Button/Button';
+</code></pre>
+
+<p>w powyższym kodzie eksportujemy wszystkie (3) nasze komponenty. Dzięki temu od teraz możemy importować tak:</p>
+
+<pre><code class="language-js">// src/containers/home
+import {Time, Button} from 'components';
+</code></pre>
+
+<p>Trzeba przyznać, że takie importowanie jest o wiele czytelniejsze i przyjemniejsze 🙂</p>
+
+                  <br/>
+                  <hr/>
+                  <br/>
+                  <div id="disqus_thread"></div>
+<script>
+    
+
+    
+
+
+
+   
+    var x = "http:\/\/karolgorecki.pl\/post\/import-react\/";
+    var y = "";
+    (function() {  
+        var d = document, s = d.createElement('script');
+        s.src = '//karolgorecki.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:hi@karolgorecki.pl">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/karolgorecki">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/karolgorecki">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">© 2016 by Karol Górecki</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://karolgorecki.pl/js/jquery.min.js"></script>
+
+    
+    <script src="http://karolgorecki.pl/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://karolgorecki.pl/js/clean-blog.js"></script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-69602801-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+</body>
+
+</html>
+

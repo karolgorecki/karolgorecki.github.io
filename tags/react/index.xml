@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>React on Karol Górecki</title>
+    <link>http://karolgorecki.pl/tags/react/</link>
+    <description>Recent content in React on Karol Górecki</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2016 by Karol Górecki</copyright>
+    <lastBuildDate>Sun, 20 Dec 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://karolgorecki.pl/tags/react/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Lepsze importowanie plików w ReactJS</title>
+      <link>http://karolgorecki.pl/post/import-react/</link>
+      <pubDate>Sun, 20 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://karolgorecki.pl/post/import-react/</guid>
+      <description>
+
+&lt;h1 id=&#34;importowanie-relatywne:9409937ad10ab5cb8821b2a45dac50d2&#34;&gt;Importowanie relatywne 😣&lt;/h1&gt;
+
+&lt;p&gt;Jeśli miałeś przyjemność pracować z ReactJS to zapewne niejednokrotnie spotkałeś się z poniższym zapisem&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;import Foo from &#39;../../components/Foo&#39;;
+import Bar from &#39;../../containers/common/Bar.js&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Na pierwszy rzut oka wygląda OK, jednak na dłuższą metę taki zapis jest
+nieco irytujący i może być w przyszłości problematyczny.
+Co jeśli chcielibyśmy przenieść nasze komponenty lub kontenery w inne miejsce? No właśnie! Musielibyśmy
+w kilkunastu lub kilkudziesięciu plikach zmieniać ścieżki.
+Nie trudno też o pomyłki przy podawaniu lokalizacji gdy projekt nam się nieco rozrośnie.&lt;/p&gt;
+
+&lt;h1 id=&#34;webpack-resolve-alias:9409937ad10ab5cb8821b2a45dac50d2&#34;&gt;Webpack Resolve Alias 😍&lt;/h1&gt;
+
+&lt;p&gt;Na szczęście istenieje sposób żeby usprawnić importowanie. Wystarczy, że skorzystamy z aliasów dostępnych
+w Webpacku (&lt;code&gt;Webpack Alias&lt;/code&gt;). Do naszej Webpackowej konfiguracji dodajemy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;...
+resolve: {
+  alias: {
+    &#39;~&#39;: path.resolve(__dirname, &#39;src&#39;),
+    &#39;components&#39;: path.resolve(__dirname, &#39;src/components&#39;),
+    &#39;containers&#39;: path.resolve(__dirname, &#39;src/containers&#39;)
+  }
+},
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Po tej prostej operacji możemy używać poniższych zapisów&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;import Foo from &#39;~/components/Foo&#39;;
+import Bar from &#39;~/containers/common/Bar.js&#39;;
+// lub
+import Foo from &#39;components/Foo&#39;;
+import Bar from &#39;containers/common/Bar.js&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;webpack-modulesdirectories:9409937ad10ab5cb8821b2a45dac50d2&#34;&gt;Webpack modulesDirectories&lt;/h1&gt;
+
+&lt;p&gt;Inną i nieco lepszą opcją jest użycie &lt;code&gt;modulesDirectories&lt;/code&gt;. Do konfiguracji musimy dodać:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+resolve: {
+    modulesDirectories: [
+      &#39;src&#39;, // dodajemy katalog src
+      &#39;node_modules&#39;
+    ],
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Do sekcji &lt;code&gt;modulesDirectories&lt;/code&gt; dodajmy katalog &lt;code&gt;src&lt;/code&gt;, w którym będziemy trzymać nasze komponenty,
+kontenery itd. Kolejnym krokiem jest stworzenie pliku &lt;code&gt;index.js&lt;/code&gt; dla komponentów oraz kontenerów.
+Dla przykładu przyjrzyjmy się następującej strukturze&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;nasz-projekt
+ ├── ...
+ └── src
+     ├── components
+     │   ├── Time
+     │   │   └── Time.js
+     │   ├── Counter
+     │   │   └── Counter.js
+     │   └── Button
+     │   │   └── Button.js
+     │   └── index.js // zawiera indeks komponentów
+     │
+     └── containers
+         ├── Home
+         │   └── Home.js
+         ├── About
+         │   └── About.js
+         └── Contact
+         │   └── Contact.js
+         └── index.js // zawiera indeks kontenerów
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Interesują nas tutaj pliki &lt;code&gt;index.js&lt;/code&gt; w katalogu &lt;code&gt;src/components&lt;/code&gt; oraz &lt;code&gt;src/containers&lt;/code&gt;.
+W naszych indeksach powinniśmy wyeksportować komponenty, które później chcemy importować:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// src/components/index.js
+export Time from &#39;./Time/Time&#39;;
+export Counter from &#39;./Counter/Counter&#39;;
+export Button from &#39;./Button/Button&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;w powyższym kodzie eksportujemy wszystkie (3) nasze komponenty. Dzięki temu od teraz możemy importować tak:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// src/containers/home
+import {Time, Button} from &#39;components&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Trzeba przyznać, że takie importowanie jest o wiele czytelniejsze i przyjemniejsze 🙂&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
